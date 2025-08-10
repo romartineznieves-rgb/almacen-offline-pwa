@@ -1,0 +1,42 @@
+/* Minimal styles */
+:root {
+  --primary: #0ea5e9;
+  --bg: #0b1220;
+  --surface: #0f172a;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+}
+.app-header, .app-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid #1f2937;
+}
+.app-footer { border-top: 1px solid #1f2937; border-bottom: none; }
+main { padding: 1rem; }
+.card {
+  background: var(--surface);
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 1rem;
+  max-width: 720px;
+}
+#installBtn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#installBtn:hover { filter: brightness(1.1); }
