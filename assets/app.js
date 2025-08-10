@@ -98,8 +98,9 @@ function fillMapping(columns) {
     });
   });
   // heurística simple
-  autoSelect(mapMatricula, columns, ['matricula', 'métrica', 'codigo', 'código', 'sku']);
-  autoSelect(mapNombre, columns, ['nombre', 'descripcion', 'descripción', 'detalle']);
+  // SAP: "Matrícula" suele ser código de material; "Texto breve de material" = nombre
+  autoSelect(mapMatricula, columns, ['matricula', 'matrícula', 'codigo', 'código', 'sku', 'material', 'id material']);
+  autoSelect(mapNombre, columns, ['nombre', 'descripcion', 'descripción', 'detalle', 'texto breve de material', 'texto']);
   autoSelect(mapStock, columns, ['stock', 'cantidad', 'disponible']);
   autoSelect(mapPrecio, columns, ['precio', 'importe', 'valor']);
   mappingDiv.hidden = false;
@@ -218,15 +219,55 @@ function sleep(ms) { return new Promise((res) => setTimeout(res, ms)); }
 
 // --- Search ---
 const searchInput = document.getElementById('searchInput');
+const stockFilter = document.getElementById('stockFilter');
+const suggestions = document.getElementById('suggestions');
 const resultsUl = document.getElementById('results');
 const resultsCount = document.getElementById('resultsCount');
 
 searchInput?.addEventListener('input', debounce(async () => {
   await ensureIndex();
   const q = searchInput.value.trim();
-  const hits = q ? mini.search(q) : (await db.materiales.limit(100).toArray()).map((m) => ({ id: String(m.id), score: 1, ...m }));
+  if (q) renderSuggestions(q); else hideSuggestions();
+  const hits = await searchWithStock(q, stockFilter?.value || 'all');
   renderResults(hits);
 }, 150));
+
+stockFilter?.addEventListener('change', async () => {
+  const q = searchInput.value.trim();
+  const hits = await searchWithStock(q, stockFilter.value);
+  renderResults(hits);
+});
+
+async function searchWithStock(q, stockMode) {
+  let hits;
+  if (q) {
+    // search by name or matricula; ensure both are indexed
+    hits = mini.search(q).map((h) => ({ ...h }));
+  } else {
+    hits = (await db.materiales.limit(200).toArray()).map((m) => ({ id: String(m.id), score: 1, ...m }));
+  }
+  if (stockMode === '>0') hits = hits.filter((x) => (x.stock ?? 0) > 0);
+  if (stockMode === '=0') hits = hits.filter((x) => (x.stock ?? 0) === 0);
+  return hits;
+}
+
+function renderSuggestions(q) {
+  const hits = mini.search(q, { prefix: true });
+  suggestions.innerHTML = '';
+  hits.slice(0, 8).forEach((h) => {
+    const li = document.createElement('li');
+    li.textContent = `${h.nombre} — ${h.matricula}`;
+    li.addEventListener('click', () => {
+      searchInput.value = h.nombre;
+      hideSuggestions();
+      renderResults([h]);
+    });
+    suggestions.appendChild(li);
+  });
+  suggestions.hidden = hits.length === 0;
+}
+
+function hideSuggestions() { suggestions.hidden = true; suggestions.innerHTML = ''; }
 
 async function ensureIndex() {
   if (!mini) await buildIndex();

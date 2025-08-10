@@ -49,8 +49,16 @@
 
       <section class="card">
         <h2>Buscar materiales</h2>
-        <input id="searchInput" type="search" placeholder="Buscar por nombre o matrícula..." />
-        <div id="resultsCount" class="muted"></div>
+        <div class="row">
+          <input id="searchInput" type="search" placeholder="Buscar por Texto breve de material o Matrícula..." style="flex:1" />
+          <select id="stockFilter" title="Filtrar por stock">
+            <option value="all">Todos</option>
+            <option value=">0">Con stock</option>
+            <option value="=0">Sin stock</option>
+          </select>
+        </div>
+        <ul id="suggestions" class="menu" hidden></ul>
+        <div id="resultsCount" class="muted" style="margin-top:.5rem"></div>
         <ul id="results" class="list"></ul>
       </section>
 

@@ -72,3 +72,11 @@ button.small { padding: .3rem .6rem; font-size: .85rem; border-radius: 6px; }
   cursor: pointer;
 }
 #installBtn:hover { filter: brightness(1.1); }
+
+/* Suggestions menu and select */
+.menu { list-style: none; padding: 0; margin: .25rem 0 0; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden; max-width: 100%; }
+.menu[hidden] { display: none; }
+.menu li { padding: .4rem .6rem; background: #0f172a; cursor: pointer; }
+.menu li+li { border-top: 1px solid #1f2937; }
+.menu li:hover, .menu li.active { background: #162238; }
+select { background: #0f172a; color: var(--text); border: 1px solid #1f2937; border-radius: 8px; padding: .4rem .6rem; }
