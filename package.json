@@ -1,0 +1,9 @@
+{
+  "name": "almacen-offline-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npx http-server -p 5173 -c-1 .",
+    "serve": "npx http-server -p 5173 -c-1 ."
+  }
+}
