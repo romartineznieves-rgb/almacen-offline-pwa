@@ -1,5 +1,5 @@
 // Simple service worker for offline caching
-const CACHE_NAME = 'almacen-offline-v2';
+const CACHE_NAME = 'almacen-offline-v3';
 const baseUrl = new URL(self.registration.scope);
 const root = baseUrl.pathname.endsWith('/') ? baseUrl.pathname : baseUrl.pathname + '/';
 const PRECACHE = [
@@ -8,12 +8,8 @@ const PRECACHE = [
   'manifest.webmanifest',
   'assets/styles.css',
   'assets/app.js',
-  'offline.html',
-  // CDN libs for MVP (best-effort; will be cached on install)
-  'https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js',
-  'https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js',
-  'https://cdn.jsdelivr.net/npm/minisearch@6.3.0/dist/umd/index.min.js'
-].map((p) => (p.startsWith('http') ? p : new URL(p, baseUrl).href));
+  'offline.html'
+].map((p) => new URL(p, baseUrl).href);
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
